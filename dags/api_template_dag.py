@@ -10,6 +10,7 @@ can experiment with `expand()` for dynamic task mapping (one mapped task per
 city), `@task_group` to group extract/transform/load stages, or
 `@task.short_circuit` to make the no-data path explicit. Keep the original
 linear version working before trying these extensions.
+###     - P: What? Little of the made sense. (09-21-26)
 
 ## Instructions for Students:
 1.  **Fill in the `TODO` sections** in each task to complete the pipeline.
