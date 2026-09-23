@@ -147,9 +147,9 @@ def starter_dag_elt():
         conn = get_snowflake_connection(schema=SNOWFLAKE_SCHEMA)
         
         try:
-            # Create table if it doesn't exist (DML based on DataFrame columns)
-            # This is a basic example; for production, use DDL in version control.
-            # Example DDL for your Snowflake table (run this manually in Snowflake once):
+            # - Create table if it doesn't exist (DML based on DataFrame columns)
+            # - This is a basic example; for production, use DDL in version control.
+            # - Example DDL for your Snowflake table (run this manually in Snowflake once):
             #
             # CREATE TABLE IF NOT EXISTS PROJECT_DB.RAW.STARTER_DAG_LASTNAME_FI (
             #     ACTIVITY_IDEA VARCHAR,
