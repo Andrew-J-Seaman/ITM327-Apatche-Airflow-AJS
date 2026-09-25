@@ -18,15 +18,17 @@ from utils import get_snowflake_connection
 # -------------------------------------------------------------------
 # Configuration
 # -------------------------------------------------------------------
-ON_OFF_SNOWFLAKE_LOAD_ENABLED = True # Set to True to enable Snowflake loading. # UPDATE: Changed to True (09-25-2026)
+ON_OFF_SNOWFLAKE_LOAD_ENABLED = True  # Set to True to enable Snowflake loading
 SNOWFLAKE_DATABASE = os.getenv("SNOWFLAKE_DATABASE", "PROJECT_DB") # Default to PROJECT_DB
 SNOWFLAKE_SCHEMA = os.getenv("SNOWFLAKE_SCHEMA", "RAW") # Default to RAW
-SNOWFLAKE_TABLE = "STARTER_DAG_SEAMAN_A" # Table name for Bored API data
+SNOWFLAKE_TABLE = "STARTER_DAG_SEAMAN_A" # Table name for Bored API data #TODO update with your table name
 
 @dag(
     dag_id="starter_dag",
-    # Dynamic: "7 days ago at midnight UTC", evaluated at DAG parse time. Safety net for the starter — even if you flip catchup=True, the worst-case backfill is ~7 daily runs. For DAG 2 / DAG 3 with real backfill, use a fixed date like datetime(2026, 1, 6, tzinfo=timezone.utc) and let catchup=True walk from there.
-    start_date=(datetime.now(timezone.utc) - timedelta(days=7)).replace(hour=0, minute=0, second=0, microsecond=0),
+    # Fixed date, not a runtime-evaluated one — a value like datetime.now() re-evaluates on every DAG parse
+    # and bumps the DAG version each time. With catchup=False the exact date doesn't drive backfill behavior;
+    # for DAG 2 / DAG 3 with real backfill, use a fixed date here and let catchup=True walk forward from it.
+    start_date=datetime(2026, 1, 1, tzinfo=timezone.utc),
     schedule="@daily",
     catchup=False, # Flip to True only after you understand backfill; with an old start_date + @daily this can enqueue 100+ runs at once and stall the local stack
     tags=["starter", "example", "elt", "snowflake"],
@@ -147,9 +149,9 @@ def starter_dag_elt():
         conn = get_snowflake_connection(schema=SNOWFLAKE_SCHEMA)
         
         try:
-            # - Create table if it doesn't exist (DML based on DataFrame columns)
-            # - This is a basic example; for production, use DDL in version control.
-            # - Example DDL for your Snowflake table (run this manually in Snowflake once):
+            # Create table if it doesn't exist (DML based on DataFrame columns)
+            # This is a basic example; for production, use DDL in version control.
+            # Example DDL for your Snowflake table (run this manually in Snowflake once):
             #
             # CREATE TABLE IF NOT EXISTS PROJECT_DB.RAW.STARTER_DAG_LASTNAME_FI (
             #     ACTIVITY_IDEA VARCHAR,
@@ -196,3 +198,8 @@ def starter_dag_elt():
 
 # Instantiate DAG
 starter_dag_elt()
+
+
+# HISTORY:
+
+# 2026-09-25: Initial version copied from Brother Clark's posted file overhaul (fix) in Slack.
