@@ -21,7 +21,7 @@ from utils import get_snowflake_connection
 ON_OFF_SNOWFLAKE_LOAD_ENABLED = True  # Set to True to enable Snowflake loading
 SNOWFLAKE_DATABASE = os.getenv("SNOWFLAKE_DATABASE", "PROJECT_DB") # Default to PROJECT_DB
 SNOWFLAKE_SCHEMA = os.getenv("SNOWFLAKE_SCHEMA", "RAW") # Default to RAW
-SNOWFLAKE_TABLE = "STARTER_DAG_SEAMAN_A" # Table name for Bored API data #TODO update with your table name
+SNOWFLAKE_TABLE = "STARTER_DAG_SEAMAN_A" # 1. Table name for Bored API data; # 2. TODO: update with your table name
 
 @dag(
     dag_id="starter_dag",
